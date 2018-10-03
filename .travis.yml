@@ -1,0 +1,27 @@
+
+language: java
+
+sudo: required
+
+jdk: oraclejdk8
+
+services:
+  - docker
+
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::7}
+
+script: mvn clean install
+
+cache:
+  directories:
+  - $HOME/.m2
+
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - export IMAGE_NAME=bsomogyi/webcrawler
+  - docker build -t $IMAGE_NAME:$COMMIT .
+  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+  - docker push $IMAGE_NAME
