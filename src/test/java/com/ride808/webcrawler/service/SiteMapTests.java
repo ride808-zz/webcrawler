@@ -8,43 +8,30 @@ import static org.junit.Assert.assertTrue;
 public class SiteMapTests{
 
     @Test
-    public void test_domainSiteAdded_IsCreatedSuccessfullyInSiteMap() {
-        SiteMap map = new SiteMap();
-        map.putLink("www.google.com", map.DOMAIN);
-        assertTrue("SiteMap should contain DomainLinks", map.siteMap.containsKey(map.DOMAIN));
-        assertTrue("Sitemap should not contain ExternalLinks", !map.siteMap.containsKey(map.EXTERNAL));
-        assertTrue("Sitemap should not contain Static Content Links", !map.siteMap.containsKey(map.STATIC));
-    }
-
-    @Test
     public void test_externalSiteAdded_IsCreatedSuccessfullyInSiteMap() {
-        SiteMap map = new SiteMap();
-        map.putLink("www.google.com", map.EXTERNAL);
-        assertTrue("SiteMap should contain ExternalLinks", map.siteMap.containsKey(map.EXTERNAL));
-        assertTrue("Sitemap should not contain DomainLinks", !map.siteMap.containsKey(map.DOMAIN));
-        assertTrue("Sitemap should not contain Static Content Links", !map.siteMap.containsKey(map.STATIC));
+        SiteMap mapInstance = new SiteMap();
+        mapInstance.putLink("www.google.com", mapInstance.EXTERNAL);
+        assertTrue("SiteMap should contain ExternalLinks", mapInstance.outputMap.containsKey(mapInstance.EXTERNAL));
     }
 
     @Test
     public void test_staticSiteAdded_IsCreatedSuccessfullyInSiteMap() {
-        SiteMap map = new SiteMap();
-        map.putLink("www.google.com", map.STATIC);
-        assertTrue("SiteMap should contain StaticLinks", map.siteMap.containsKey(map.STATIC));
-        assertTrue("Sitemap should not contain ExternalLinks", !map.siteMap.containsKey(map.EXTERNAL));
-        assertTrue("Sitemap should not contain DomainLinks", !map.siteMap.containsKey(map.DOMAIN));
+        SiteMap mapInstance = new SiteMap();
+        mapInstance.putLink("www.google.com", mapInstance.STATIC);
+        assertTrue("SiteMap should contain StaticLinks", mapInstance.outputMap.containsKey(mapInstance.STATIC));
     }
 
     @Test
     public void test_twoDomainsAddedToMap_BothArePresentDomainList() {
-        SiteMap map = new SiteMap();
-        map.putLink("www.google.com", map.DOMAIN);
-        map.putLink("www.google.com/test", map.DOMAIN);
+        SiteMap mapInstance = new SiteMap();
+        mapInstance.putLink("www.google.com", mapInstance.DOMAIN);
+        mapInstance.putLink("www.google.com/test", mapInstance.DOMAIN);
+        mapInstance.putLink("www.google.com/unique", mapInstance.DOMAIN);
 
-        assertEquals("www.google.com", map.siteMap.get(map.DOMAIN).get(0));
-        assertEquals("www.google.com/test", map.siteMap.get(map.DOMAIN).get(1));
-        assertTrue("Sitemap should not contain ExternalLinks", !map.siteMap.containsKey(map.EXTERNAL));
-        assertTrue("Sitemap should not contain StaticLinks", !map.siteMap.containsKey(map.STATIC));
+        assertEquals("www.google.com", mapInstance.outputMap.get(mapInstance.DOMAIN).get(0));
+        assertEquals("www.google.com/test", mapInstance.outputMap.get(mapInstance.DOMAIN).get(1));
+        assertEquals("www.google.com/unique", mapInstance.outputMap.get(mapInstance.DOMAIN).get(2));
+        assertTrue(mapInstance.linkExists("www.google.com/unique", mapInstance.DOMAIN));
     }
-
 
 }
