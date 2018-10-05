@@ -1,8 +1,17 @@
 package com.ride808.webcrawler.service;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
+
+/**
+ * LinkQueue for providing queue funtionality.  Queues are utilized by the PageCrawler for managing the links that have
+ * not yet been processed
+ *
+ * @Author Ben Somogyi <benjamin.somogyi@gmail.com> 10/3/18
+ */
+
+@Service
 public class LinkQueue {
     LinkedList linkQueue;
 

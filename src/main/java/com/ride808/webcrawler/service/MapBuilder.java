@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
-*  The SiteMap Class is a Singleton for structing the output of all sites gathred from teh the multithreaded webcrawler
+*  The MapBuilder Class is for structing the output of all sites gathered from th the webcrawler
 *  application.  It includes the functionality to syncronize threads as they operate on the data structure, adding new
 *  internal, external, and static links.
 *
@@ -20,18 +20,18 @@ import java.util.*;
 */
 
 @Service
-public class SiteMap {
+public class MapBuilder {
     public static final String DOMAIN = "DomainLinks";
     public static final String EXTERNAL = "ExternalLinks";
     public static final String STATIC = "StaticContentLinks";
-    Map<String, List<String>> outputMap;
+    HashMap<String, Set<String>> outputMap;
 
 
-    public SiteMap() {
-        outputMap = Collections.synchronizedMap(new HashMap<String, List<String>>());
-        outputMap.put(DOMAIN, new LinkedList<String>());
-        outputMap.put(EXTERNAL, new LinkedList<String>());
-        outputMap.put(STATIC, new LinkedList<String>());
+    public MapBuilder() {
+        outputMap = new HashMap<String, Set<String>>();
+        outputMap.put(DOMAIN, new HashSet<String>());
+        outputMap.put(EXTERNAL, new HashSet<String>());
+        outputMap.put(STATIC, new HashSet<String>());
     }
 
     /**
@@ -48,7 +48,7 @@ public class SiteMap {
        return outputMap.get(type).contains(url);
     }
 
-    public Map<String, List<String>> getOutputMap(){
+    public HashMap<String, Set<String>> getOutputMap(){
         return this.outputMap;
     }
     /**
@@ -61,9 +61,9 @@ public class SiteMap {
     public void putLink(String url, String type) {
         synchronized (outputMap) {
 
-            List<String> valueList = outputMap.get(type);
+            Set<String> valueList = outputMap.get(type);
             if (valueList == null) {
-                valueList = new ArrayList<String>();
+                valueList = new HashSet<>();
                 switch (type) {
                     case DOMAIN:
                         outputMap.put(type, valueList);
@@ -117,13 +117,4 @@ public class SiteMap {
         System.out.println(getJsonSiteMap());
     }
 
-    public void printMap() {
-        for (Map.Entry<String, List<String>> e : this.outputMap.entrySet()) {
-            System.out.println(e.getKey() + ":");
-            for (String e1 : e.getValue()) {
-                System.out.println(e.getKey() + " = " + e1);
-            }
-            System.out.println();
-        }
-    }
 }

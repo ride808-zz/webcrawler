@@ -1,6 +1,5 @@
 package com.ride808.webcrawler.service;
 
-import com.ride808.webcrawler.controller.SiteMapController;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.*;
 
 /**
  * The PageCrawler is a static class responsible for taking a given page and processing all the links.  All links (internal)
@@ -35,7 +33,7 @@ public class PageCrawler {
      * @return LinkedHashSet
      */
 
-    public void extractLinks(SiteMap mapInstance, LinkQueue linkQueue, String url) {
+    public void extractLinks(MapBuilder mapInstance, LinkQueue linkQueue, String url) {
 
         String domain = "";
         if (isValid(url)) {
@@ -52,8 +50,8 @@ public class PageCrawler {
             url = linkQueue.pop();
 
             //Store the page to be processed as visited
-            if (!mapInstance.exists(url, SiteMap.DOMAIN)) {
-                mapInstance.putLink(url, SiteMap.DOMAIN);
+            if (!mapInstance.exists(url, MapBuilder.DOMAIN)) {
+                mapInstance.putLink(url, MapBuilder.DOMAIN);
             } else {  //If the pate was visited, skip it.
                 continue;
             }
@@ -78,12 +76,12 @@ public class PageCrawler {
                             if (getUri(currentLink).getHost().contains(domain)) { //It's a domain link
 
                                 //Only store the domain link in the queue if it wasn't already visited
-                                if (!mapInstance.exists(currentLink, SiteMap.DOMAIN)) {
+                                if (!mapInstance.exists(currentLink, MapBuilder.DOMAIN)) {
                                     linkQueue.push(currentLink);
                                 }
                             } else { //Process external Links directly to SiteMap
-                                if (!mapInstance.exists(currentLink, SiteMap.EXTERNAL)) {
-                                    mapInstance.putLink(currentLink, SiteMap.EXTERNAL);
+                                if (!mapInstance.exists(currentLink, MapBuilder.EXTERNAL)) {
+                                    mapInstance.putLink(currentLink, MapBuilder.EXTERNAL);
                                 }
                             }
                         } catch (Exception e) {
@@ -97,13 +95,13 @@ public class PageCrawler {
                     String srcLink = src.attr("abs:src");
 
                     if (src.tagName().equals("img")) {
-                        if (!mapInstance.exists(srcLink, SiteMap.STATIC)) {
-                            mapInstance.putLink(srcLink, SiteMap.STATIC);
+                        if (!mapInstance.exists(srcLink, MapBuilder.STATIC)) {
+                            mapInstance.putLink(srcLink, MapBuilder.STATIC);
                         }
 
                     } else { //Scripts, Other Media, etc
-                        if (!mapInstance.exists(srcLink, SiteMap.STATIC)) {
-                            mapInstance.putLink(srcLink, SiteMap.STATIC);
+                        if (!mapInstance.exists(srcLink, MapBuilder.STATIC)) {
+                            mapInstance.putLink(srcLink, MapBuilder.STATIC);
                         }
                     }
                 }
@@ -113,9 +111,9 @@ public class PageCrawler {
             } catch (IOException e) {
                 log.error("Could not proces webpage %s : %s", url, e);
             }
-            //System.out.println("Finished to process page: " + url.toString());
         }
 
+        log.info("Processing finished for Domain=" + domain);
     }
 
     /* Returns true if url is valid */
@@ -153,7 +151,7 @@ public class PageCrawler {
 
                 //System.out.println("Content-Type: " + url.openConnection().getContentType());
 
-                SiteMap mapInstance = new SiteMap();
+                MapBuilder mapInstance = new MapBuilder();
                 LinkQueue linkQueue = new LinkQueue();
                 linkQueue.push(url.toString());
 
