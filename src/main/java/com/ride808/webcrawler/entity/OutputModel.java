@@ -2,10 +2,11 @@ package com.ride808.webcrawler.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  *  Output entity for Spring MVC resource for displaying a Map of Domain, External, and Static Content links discovered
@@ -21,14 +22,15 @@ public class OutputModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    Map<String, List<String>> outputMap;
+    HashMap<String, Set<String>> outputMap;
     String domain;
 
-    public void setOutputMap(Map<String, List<String>> outputMap){
+    @Column
+    public void setOutputMap(HashMap<String, Set<String>> outputMap){
         this.outputMap = outputMap;
     }
 
-    public Map<String, List<String>> getOutputMap(){
+    public HashMap<String, Set<String>> getOutputMap(){
 
         return this.outputMap;
     }
