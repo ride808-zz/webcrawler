@@ -31,7 +31,7 @@ public class SiteMapTests{
         assertEquals("www.google.com", mapInstance.outputMap.get(mapInstance.DOMAIN).get(0));
         assertEquals("www.google.com/test", mapInstance.outputMap.get(mapInstance.DOMAIN).get(1));
         assertEquals("www.google.com/unique", mapInstance.outputMap.get(mapInstance.DOMAIN).get(2));
-        assertTrue(mapInstance.linkExists("www.google.com/unique", mapInstance.DOMAIN));
+        assertTrue(mapInstance.exists("www.google.com/unique", mapInstance.DOMAIN));
     }
 
 }

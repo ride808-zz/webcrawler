@@ -1,7 +1,8 @@
 package com.ride808.webcrawler.controller;
 
 import com.ride808.webcrawler.model.OutputModel;
-import com.ride808.webcrawler.service.PageHandler;
+import com.ride808.webcrawler.service.LinkQueue;
+import com.ride808.webcrawler.service.PageCrawler;
 import com.ride808.webcrawler.service.SiteMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  *
@@ -27,7 +25,7 @@ public class SiteMapController {
 
 
     @Autowired
-    private PageHandler pageHandler;
+    private PageCrawler pageCrawler;
 
     /**
      * GET Resource to retrive the internal, external, and static content links from a specified url
@@ -37,12 +35,10 @@ public class SiteMapController {
     @RequestMapping(value = "/sitemap", method = RequestMethod.GET)
     public OutputModel getMap(@RequestParam(value = "url") String url){
         SiteMap mapInstance = new SiteMap();
+        LinkQueue linkQueue = new LinkQueue();
 
-        try {
-            pageHandler.extractLinks(mapInstance, new URL(url));
-        }catch(MalformedURLException e){
-           log.error("Mallformed URL Exception:" + url);
-        }
+        pageCrawler.extractLinks(mapInstance, linkQueue, url);
+
         OutputModel model = new OutputModel(mapInstance.getOutputMap());
 
         return model;

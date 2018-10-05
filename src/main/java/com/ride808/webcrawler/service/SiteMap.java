@@ -27,6 +27,9 @@ public class SiteMap {
 
     public SiteMap() {
         outputMap = Collections.synchronizedMap(new HashMap<String, List<String>>());
+        outputMap.put(DOMAIN, new LinkedList<String>());
+        outputMap.put(EXTERNAL, new LinkedList<String>());
+        outputMap.put(STATIC, new LinkedList<String>());
     }
 
     /**
@@ -38,7 +41,7 @@ public class SiteMap {
      * @return boolean
      */
 
-    public boolean linkExists(String url, String type){
+    public boolean exists(String url, String type){
 
        return outputMap.get(type).contains(url);
     }
