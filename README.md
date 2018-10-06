@@ -29,6 +29,7 @@
   
  -  Multi-Threaded application: The speed of the application could be greatly increased by adding additional threads to crawl the webpages. This would require iterations on queue management and syncronization of crawlers operating on the SiteMap.
  -  More Robust Testing.  Addition of a mocking framework as well.
+ -  Add support for the Robots Exclusion Protocol
       
 ## Usage  
  - Build  & Test  
