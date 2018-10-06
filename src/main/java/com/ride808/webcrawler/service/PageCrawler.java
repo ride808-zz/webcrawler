@@ -64,47 +64,9 @@ public class PageCrawler {
                 Elements links = doc.select("a[href]");
                 Elements staticContent = doc.select("[src]");
 
-                //Process all links on the page
-                for (Element link : links) {
+                processLinks(mapInstance, linkQueue, domain, links);
 
-                    String currentLink = link.attr("abs:href");
-
-                    if (isValid(currentLink)) {
-
-
-                        try {
-                            if (getUri(currentLink).getHost().contains(domain)) { //It's a domain link
-
-                                //Only store the domain link in the queue if it wasn't already visited
-                                if (!mapInstance.exists(currentLink, MapBuilder.DOMAIN)) {
-                                    linkQueue.push(currentLink);
-                                }
-                            } else { //Process external Links directly to SiteMap
-                                if (!mapInstance.exists(currentLink, MapBuilder.EXTERNAL)) {
-                                    mapInstance.putLink(currentLink, MapBuilder.EXTERNAL);
-                                }
-                            }
-                        } catch (Exception e) {
-                            log.error("Unable to process URL " + currentLink + " due to exception");
-                        }
-                    }
-                }
-
-                //Process static content directly to the SiteMap
-                for (Element src : staticContent) {
-                    String srcLink = src.attr("abs:src");
-
-                    if (src.tagName().equals("img")) {
-                        if (!mapInstance.exists(srcLink, MapBuilder.STATIC)) {
-                            mapInstance.putLink(srcLink, MapBuilder.STATIC);
-                        }
-
-                    } else { //Scripts, Other Media, etc
-                        if (!mapInstance.exists(srcLink, MapBuilder.STATIC)) {
-                            mapInstance.putLink(srcLink, MapBuilder.STATIC);
-                        }
-                    }
-                }
+                processStaticLInks(mapInstance, staticContent);
 
                 //mapInstance.printJsonMap();
 
@@ -114,6 +76,52 @@ public class PageCrawler {
         }
 
         log.info("Processing finished for Domain=" + domain);
+    }
+
+    private void processStaticLInks(MapBuilder mapInstance, Elements staticContent) {
+        //Process static content directly to the SiteMap
+        for (Element src : staticContent) {
+            String srcLink = src.attr("abs:src");
+
+            if (src.tagName().equals("img")) {
+                if (!mapInstance.exists(srcLink, MapBuilder.STATIC)) {
+                    mapInstance.putLink(srcLink, MapBuilder.STATIC);
+                }
+
+            } else { //Scripts, Other Media, etc
+                if (!mapInstance.exists(srcLink, MapBuilder.STATIC)) {
+                    mapInstance.putLink(srcLink, MapBuilder.STATIC);
+                }
+            }
+        }
+    }
+
+    private void processLinks(MapBuilder mapInstance, LinkQueue linkQueue, String domain, Elements links) {
+        //Process all links on the page
+        for (Element link : links) {
+
+            String currentLink = link.attr("abs:href");
+
+            if (isValid(currentLink)) {
+
+
+                try {
+                    if (getUri(currentLink).getHost().contains(domain)) { //It's a domain link
+
+                        //Only store the domain link in the queue if it wasn't already visited
+                        if (!mapInstance.exists(currentLink, MapBuilder.DOMAIN)) {
+                            linkQueue.push(currentLink);
+                        }
+                    } else { //Process external Links directly to SiteMap
+                        if (!mapInstance.exists(currentLink, MapBuilder.EXTERNAL)) {
+                            mapInstance.putLink(currentLink, MapBuilder.EXTERNAL);
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("Unable to process URL " + currentLink + " due to exception");
+                }
+            }
+        }
     }
 
     /* Returns true if url is valid */

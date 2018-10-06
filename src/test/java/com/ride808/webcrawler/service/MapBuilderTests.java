@@ -1,9 +1,7 @@
 package com.ride808.webcrawler.service;
 
-import com.ride808.webcrawler.service.MapBuilder;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MapBuilderTests {

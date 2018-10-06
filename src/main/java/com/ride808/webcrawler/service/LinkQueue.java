@@ -20,8 +20,8 @@ public class LinkQueue {
     }
 
 
-    public void getQueueSize() {
-        linkQueue.size();
+    public int getQueueSize() {
+        return linkQueue.size();
     }
 
     public boolean isEmpty() {
