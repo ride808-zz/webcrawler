@@ -3,8 +3,6 @@ package com.ride808.webcrawler.entity;
 import javax.persistence.*;
 import java.util.Set;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *  Output entity for Spring MVC resource for displaying a Map of Domain, External, and Static Content links discovered

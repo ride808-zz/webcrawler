@@ -30,7 +30,10 @@ public class SiteMapServiceImpl implements SiteMapService{
     @Autowired
     SiteMapRepository siteMapRepository;
 
-
+    /**
+     * Save method for calling the webcrawler and producing the Site Map to be returned to the user
+     * @param url
+     */
     public void save(String url){
 
         SiteMap siteMap = new SiteMap();
@@ -48,6 +51,11 @@ public class SiteMapServiceImpl implements SiteMapService{
 
         siteMapRepository.save(siteMap);
     }
+
+    /**
+     * Returns a json representation of the SiteMap to the end user
+     * @return
+     */
 
     public String getSiteMap(){
         ObjectMapper mapper = new ObjectMapper();
